@@ -1,2 +1,0 @@
-# TGSIGMACOIN
-asdasdasd23er

@@ -1,0 +1,338 @@
+<html><head><base href="/" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sigma Crypto Clicker</title>
+<style>
+:root {
+  --neon-blue: #00f3ff;
+  --neon-purple: #9d00ff;
+}
+
+body {
+  background: #0a0a0a;
+  color: white;
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  padding: 20px;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.crypto-btn {
+  background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+  border: none;
+  padding: 20px 40px;
+  border-radius: 10px;
+  font-size: 24px;
+  color: white;
+  cursor: pointer;
+  transition: transform 0.1s;
+  margin: 20px 0;
+  text-shadow: 0 0 10px rgba(255,255,255,0.5);
+  animation: pulse 2s infinite;
+}
+
+.crypto-btn:active {
+  transform: scale(0.95);
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(0, 243, 255, 0.4); }
+  70% { box-shadow: 0 0 0 20px rgba(0, 243, 255, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(0, 243, 255, 0); }
+}
+
+.stats {
+  background: rgba(255,255,255,0.1);
+  padding: 20px;
+  border-radius: 10px;
+  margin: 20px 0;
+}
+
+.shop-item {
+  background: rgba(255,255,255,0.05);
+  padding: 15px;
+  margin: 10px 0;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.shop-item:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+.task {
+  background: rgba(157, 0, 255, 0.1);
+  padding: 15px;
+  margin: 10px 0;
+  border-radius: 8px;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 10px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.progress {
+  height: 100%;
+  background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+  width: 0%;
+  transition: width 0.3s;
+}
+
+.tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.tab {
+  padding: 10px 20px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.tab.active {
+  background: rgba(255,255,255,0.2);
+}
+
+.section {
+  display: none;
+}
+
+.section.active {
+  display: block;
+}
+
+.notification {
+  position: fixed;
+  top: 20px;
+  right: -300px;
+  background: rgba(0, 243, 255, 0.2);
+  padding: 15px;
+  border-radius: 5px;
+  transition: right 0.3s;
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>🚀 Sigma Crypto Clicker</h1>
+  
+  <div class="stats">
+    <h2>💎 <span id="crypto-amount">0</span> SigmaCoin</h2>
+    <p>Per Click: <span id="per-click">1</span></p>
+    <p>Per Second: <span id="per-second">0</span></p>
+  </div>
+
+  <button class="crypto-btn" id="mine-btn">MINE SIGMACOIN</button>
+
+  <div class="tabs">
+    <div class="tab active" data-tab="shop">Shop 🛒</div>
+    <div class="tab" data-tab="boosters">Boosters 🚀</div>
+    <div class="tab" data-tab="tasks">Sigma Tasks 📋</div>
+  </div>
+
+  <div class="section active" id="shop">
+    <h2>Shop</h2>
+    <div class="shop-item" data-item="gpu">
+      <div>
+        <h3>GPU Rig</h3>
+        <p>+1 per second</p>
+      </div>
+      <div>Cost: <span class="cost">10</span> SC</div>
+    </div>
+    <div class="shop-item" data-item="asic">
+      <div>
+        <h3>ASIC Miner</h3>
+        <p>+5 per second</p>
+      </div>
+      <div>Cost: <span class="cost">50</span> SC</div>
+    </div>
+  </div>
+
+  <div class="section" id="boosters">
+    <h2>Boosters</h2>
+    <div class="shop-item" data-item="coffee">
+      <div>
+        <h3>Developer Coffee ☕</h3>
+        <p>2x clicks for 30 seconds</p>
+      </div>
+      <div>Cost: 100 SC</div>
+    </div>
+    <div class="shop-item" data-item="sigma">
+      <div>
+        <h3>Sigma Mindset 🧠</h3>
+        <p>3x all production for 1 minute</p>
+      </div>
+      <div>Cost: 500 SC</div>
+    </div>
+  </div>
+
+  <div class="section" id="tasks">
+    <h2>Daily Sigma Tasks</h2>
+    <div class="task">
+      <h3>Click 100 times</h3>
+      <div class="progress-bar">
+        <div class="progress" id="click-progress"></div>
+      </div>
+      <p>Reward: 500 SC</p>
+    </div>
+    <div class="task">
+      <h3>Earn 1000 SC</h3>
+      <div class="progress-bar">
+        <div class="progress" id="earn-progress"></div>
+      </div>
+      <p>Reward: 1000 SC</p>
+    </div>
+  </div>
+</div>
+
+<div class="notification" id="notification"></div>
+
+<script>
+const game = {
+  crypto: 0,
+  perClick: 1,
+  perSecond: 0,
+  clickCount: 0,
+  multiplier: 1,
+  items: {
+    gpu: { cost: 10, persec: 1, owned: 0 },
+    asic: { cost: 50, persec: 5, owned: 0 }
+  },
+  tasks: {
+    clicks: { target: 100, progress: 0, reward: 500, completed: false },
+    earn: { target: 1000, progress: 0, reward: 1000, completed: false }
+  }
+};
+
+function updateDisplay() {
+  document.getElementById('crypto-amount').textContent = Math.floor(game.crypto);
+  document.getElementById('per-click').textContent = game.perClick * game.multiplier;
+  document.getElementById('per-second').textContent = game.perSecond * game.multiplier;
+  
+  // Update progress bars
+  document.getElementById('click-progress').style.width = 
+    `${(game.tasks.clicks.progress / game.tasks.clicks.target) * 100}%`;
+  document.getElementById('earn-progress').style.width = 
+    `${(game.tasks.earn.progress / game.tasks.earn.target) * 100}%`;
+}
+
+function showNotification(message) {
+  const notification = document.getElementById('notification');
+  notification.textContent = message;
+  notification.style.right = '20px';
+  setTimeout(() => {
+    notification.style.right = '-300px';
+  }, 3000);
+}
+
+function mine() {
+  game.crypto += game.perClick * game.multiplier;
+  game.clickCount++;
+  game.tasks.clicks.progress = Math.min(game.tasks.clicks.progress + 1, game.tasks.clicks.target);
+  game.tasks.earn.progress = Math.min(game.crypto, game.tasks.earn.target);
+  
+  checkTasks();
+  updateDisplay();
+}
+
+function checkTasks() {
+  if (!game.tasks.clicks.completed && game.tasks.clicks.progress >= game.tasks.clicks.target) {
+    game.crypto += game.tasks.clicks.reward;
+    game.tasks.clicks.completed = true;
+    showNotification(`Task Complete! +${game.tasks.clicks.reward} SC`);
+  }
+  
+  if (!game.tasks.earn.completed && game.tasks.earn.progress >= game.tasks.earn.target) {
+    game.crypto += game.tasks.earn.reward;
+    game.tasks.earn.completed = true;
+    showNotification(`Task Complete! +${game.tasks.earn.reward} SC`);
+  }
+}
+
+function buyItem(item) {
+  const itemData = game.items[item];
+  if (game.crypto >= itemData.cost) {
+    game.crypto -= itemData.cost;
+    itemData.owned++;
+    itemData.cost = Math.floor(itemData.cost * 1.5);
+    game.perSecond += itemData.persec;
+    updateDisplay();
+    document.querySelector(`[data-item="${item}"] .cost`).textContent = itemData.cost;
+    showNotification(`Purchased ${item.toUpperCase()}!`);
+  }
+}
+
+function activateBooster(type) {
+  if (type === 'coffee' && game.crypto >= 100) {
+    game.crypto -= 100;
+    const oldMultiplier = game.multiplier;
+    game.multiplier *= 2;
+    setTimeout(() => {
+      game.multiplier = oldMultiplier;
+      updateDisplay();
+    }, 30000);
+    showNotification('Coffee Boost activated! 2x clicks for 30 seconds');
+  } else if (type === 'sigma' && game.crypto >= 500) {
+    game.crypto -= 500;
+    const oldMultiplier = game.multiplier;
+    game.multiplier *= 3;
+    setTimeout(() => {
+      game.multiplier = oldMultiplier;
+      updateDisplay();
+    }, 60000);
+    showNotification('SIGMA BOOST ACTIVATED! 3x production for 1 minute');
+  }
+  updateDisplay();
+}
+
+// Event Listeners
+document.getElementById('mine-btn').addEventListener('click', mine);
+
+document.querySelectorAll('.shop-item').forEach(item => {
+  item.addEventListener('click', () => {
+    const itemType = item.dataset.item;
+    if (['gpu', 'asic'].includes(itemType)) {
+      buyItem(itemType);
+    } else {
+      activateBooster(itemType);
+    }
+  });
+});
+
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById(tab.dataset.tab).classList.add('active');
+  });
+});
+
+// Passive income
+setInterval(() => {
+  game.crypto += game.perSecond * game.multiplier;
+  game.tasks.earn.progress = Math.min(game.crypto, game.tasks.earn.target);
+  checkTasks();
+  updateDisplay();
+}, 1000);
+
+updateDisplay();
+</script>
+</body>
+</html>
